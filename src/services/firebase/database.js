@@ -55,20 +55,16 @@ function voteUp(documentId) {
 
 function scrollUp() {
   var documentRef = db.collection("scrollIndex").doc("scrollIndex");
-
-// documentRef.get().then(function(doc) {
-//     if (doc.exists) {
-//         console.log("Document data:", doc.data());
-//     } else {
-//         // doc.data() will be undefined in this case
-//         console.log("No such document!");
-//     }
-// }).catch(function(error) {
-//     console.log("Error getting document:", error);
-// });
-  
   documentRef.update({
     scrollIndex: firebase.firestore.FieldValue.increment(1),
+  });
+  getScrollIndex();
+}
+
+function scrollDown() {
+  var documentRef = db.collection("scrollIndex").doc("scrollIndex");
+  documentRef.update({
+    scrollIndex: firebase.firestore.FieldValue.increment(-1),
   });
   getScrollIndex();
 }
@@ -84,6 +80,7 @@ export const databaseActions = {
   getItems,
   getScrollIndex,
   scrollUp,
+  scrollDown,
   voteUp,
   voteDown,
 };
