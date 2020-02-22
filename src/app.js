@@ -3,45 +3,45 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { actions as itemsActions } from "./state/items";
 
-import { ScrollUpButton, ScrollDownButton } from "./components/ScrollButtons/index.js"
-import { VoteUpButton, VoteDownButton } from "./components/VoteButtons/index.js"
-import { Image } from "./components/Image/index.js"
-import { Wrapper } from "./components/Wrapper/index.js"
+import {
+  VoteUpButton,
+  VoteDownButton
+} from "./components/VoteButtons/index.js";
+import { Image } from "./components/Image/index.js";
+import { Wrapper } from "./components/Wrapper/index.js";
+import { SkipButton } from "./components/skipButton";
 
 export const App = () => {
   const dispatch = useDispatch();
-  const items = useSelector(({ items }) => items.items);
-  const scrollIndex = useSelector(( { items } ) => items.scrollIndex);
-  const item = items[scrollIndex];
-  console.log(item)
-  console.log(scrollIndex)
-  console.log(items)
+  const items = useSelector(({ items }) => items.items || []);
+  const itemIndex = useSelector(({ items }) => items.itemIndex);
+  const item = items[itemIndex];
 
   useEffect(() => {
     const getItems = () => dispatch(itemsActions.getItems());
     getItems();
   }, [dispatch]);
 
-  useEffect(() => {
-    const getScrollIndex = () => dispatch(itemsActions.getScrollIndex());
-    getScrollIndex();
-  }, [dispatch]);
+  const handleSkip = () => {
+    const nextItemIndex = itemIndex === items.length - 1 ? 0 : itemIndex + 1;
+    const setItemIndex = () => dispatch(itemsActions.setItemIndex(nextItemIndex));
+    setItemIndex();
+  };
 
   return (
     <div>
-      {items.length &&
-          <Wrapper>
+      {items.length && (
+        <Wrapper>
           <div key={item.id}>
             <Image image={item.imageUrl} alt="wiki" />
-            <VoteUpButton id={item.id}/>
-            <VoteDownButton id={item.id}/>
+            <VoteUpButton id={item.id} />
+            <VoteDownButton id={item.id} />
             <div>{item.caption}</div>
             <div>Vote count: {item.voteCount}</div>
-            <ScrollUpButton/>
-            <ScrollDownButton/>
+            <SkipButton onClick={handleSkip} />
           </div>
-          </Wrapper>
-        }
+        </Wrapper>
+      )}
     </div>
   );
 };

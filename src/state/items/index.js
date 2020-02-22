@@ -1,14 +1,14 @@
 import { databaseActions } from "../../services/firebase/database";
 
+
+/* Action Types */
 const GET_ITEMS_START = "items/GET_ITEMS_START";
 const GET_ITEMS_SUCCESS = "items/GET_ITEMS_SUCCESS";
-const GET_SCROLLINDEX_START = "items/GET_SCROLLINDEX_START";
-const GET_SCROLLINDEX_SUCCESS = "items/GET_SCROLLINDEX_SUCCESS";
 const VOTE_UP = "items/VOTE_UP";
 const VOTE_DOWN = "items/VOTE_DOWN";
-const SCROLL_UP = "items/SCROLL_UP";
-const SCROLL_DOWN = "items/SCROLL_DOWN";
+const SET_ITEM_INDEX = "items/SET_ITEM_INDEX";
 
+/* Action Creators */
 const handleGetItemsStart = () => ({
   type: GET_ITEMS_START
 });
@@ -18,28 +18,9 @@ const handleGetItemsSuccess = items => ({
   payload: items
 });
 
-const handleGetScrollIndexStart = () => ({
-  type: GET_SCROLLINDEX_START
-});
-
-const handleGetscrollIndexSuccess = scrollIndex => ({
-  type: GET_SCROLLINDEX_SUCCESS,
-  payload: scrollIndex
-});
-
 const handleVoteUp = documentId => ({
   type: VOTE_UP,
   payload: documentId
-});
-
-const handleScrollUp = scrollIndex => ({
-  type: SCROLL_UP,
-  payload: scrollIndex
-});
-
-const handleScrollDown = scrollIndex => ({
-  type: SCROLL_UP,
-  payload: scrollIndex
 });
 
 const handleVoteDown = documentId => ({
@@ -47,6 +28,12 @@ const handleVoteDown = documentId => ({
   payload: documentId
 });
 
+const handleSetItemIndex = itemIndex => ({
+  type: SET_ITEM_INDEX,
+  payload: itemIndex
+});
+
+/* Actions */
 const getItems = () => {
   return async dispatch => {
     dispatch(handleGetItemsStart());
@@ -55,62 +42,29 @@ const getItems = () => {
   };
 };
 
-const getScrollIndex = () => {
-  return async dispatch => {
-    dispatch(handleGetScrollIndexStart());
-    const results = await databaseActions.getScrollIndex();
-    dispatch(handleGetscrollIndexSuccess(results));
-    console.log("GETSCROLLINDEXITEMSDISPATCH:", results);
-  };
-};
-
 const voteUp = documentId => {
-  return dispatch => {
-    dispatch(handleVoteUp(documentId));
-    databaseActions.voteUp(documentId);
-  };
-};
-
-const scrollUp = () => {
-  return async dispatch => {
-    const results = await databaseActions.getScrollIndex();
-    console.log("RESULTS", results);
-    dispatch(handleScrollUp(results));
-    databaseActions.scrollUp();
-  };
-};
-
-const scrollDown = () => {
-  return async dispatch => {
-    const results = await databaseActions.getScrollIndex();
-    console.log("RESULTS", results);
-    dispatch(handleScrollDown(results));
-    databaseActions.scrollDown();
-  };
+  databaseActions.voteUp(documentId);
+  return handleVoteUp(documentId);
 };
 
 const voteDown = documentId => {
-  return dispatch => {
-    dispatch(handleVoteDown(documentId));
-    databaseActions.voteDown(documentId);
-  };
+  databaseActions.voteDown(documentId);
+  return handleVoteDown(documentId);
 };
+
+const setItemIndex = (itemIndex) => handleSetItemIndex(itemIndex);
 
 export const actions = {
   voteUp,
   voteDown,
-  scrollUp,
-  scrollDown,
   getItems,
-  getScrollIndex
+  setItemIndex
 };
 
 const initialState = {
   items: [],
   loading: false,
-  loadingScrollIndex: false,
-  scrollIndex: 1,
-  hasVoted: false
+  itemIndex: 0
 };
 
 export const reducer = (state = initialState, action) => {
@@ -118,7 +72,6 @@ export const reducer = (state = initialState, action) => {
   let itemIndex;
   let item;
   let updatedItem;
-  let scrollIndex;
 
   switch (action.type) {
     case GET_ITEMS_START:
@@ -131,17 +84,6 @@ export const reducer = (state = initialState, action) => {
         ...state,
         loading: false,
         items: action.payload
-      };
-    case GET_SCROLLINDEX_START:
-      return {
-        ...state,
-        loadingScrollIndex: true
-      };
-    case GET_SCROLLINDEX_SUCCESS:
-      return {
-        ...state,
-        loadingScrollIndex: false,
-        scrollIndex: action.payload
       };
     case VOTE_UP:
       items = [...state.items];
@@ -176,29 +118,11 @@ export const reducer = (state = initialState, action) => {
         items,
         hasVoted: true
       };
-
-    case SCROLL_UP:
-      items = [...state.items];
-      scrollIndex = action.payload;
-      console.log("RETURNED SCROLL UP ACTIONPAYLOAD:", action.payload);
+    case SET_ITEM_INDEX:
       return {
         ...state,
-        items,
-        hasVoted: true,
-        scrollIndex: scrollIndex
-      };
-
-    case SCROLL_DOWN:
-      items = [...state.items];
-      scrollIndex = action.payload;
-      console.log("RETURNED SCROLL DOWN ACTIONPAYLOAD:", action.payload);
-      return {
-        ...state,
-        items,
-        hasVoted: true,
-        scrollIndex: scrollIndex
-      };
-
+        itemIndex: action.payload
+      }
     default:
       return state;
   }

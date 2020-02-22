@@ -17,31 +17,8 @@ function getItems() {
         resolve(itemData);
       });
   });
-  console.log("GETITEMS:", items);
+
   return items;
-}
-
-function getScrollIndex() {
-  const scrollIndex = new Promise(resolve => {
-    var documentRef = db.collection("scrollIndex").doc("scrollIndex");
-
-    documentRef
-      .get()
-      .then(function(doc) {
-        if (doc.exists) {
-          console.log("Document data:", doc.data());
-          resolve(doc.data().scrollIndex);
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
-        }
-      })
-      .catch(function(error) {
-        console.log("Error getting document:", error);
-      });
-  });
-  console.log("GETSCROLLINDEX:", scrollIndex);
-  return scrollIndex;
 }
 
 function voteUp(documentId) {
@@ -49,22 +26,6 @@ function voteUp(documentId) {
   documentRef.update({
     voteCount: firebase.firestore.FieldValue.increment(1)
   });
-}
-
-function scrollUp() {
-  var documentRef = db.collection("scrollIndex").doc("scrollIndex");
-  documentRef.update({
-    scrollIndex: firebase.firestore.FieldValue.increment(1)
-  });
-  getScrollIndex();
-}
-
-function scrollDown() {
-  var documentRef = db.collection("scrollIndex").doc("scrollIndex");
-  documentRef.update({
-    scrollIndex: firebase.firestore.FieldValue.increment(-1)
-  });
-  getScrollIndex();
 }
 
 function voteDown(documentId) {
@@ -76,9 +37,44 @@ function voteDown(documentId) {
 
 export const databaseActions = {
   getItems,
-  getScrollIndex,
-  scrollUp,
-  scrollDown,
   voteUp,
   voteDown
 };
+
+// function getScrollIndex() {
+//   const scrollIndex = new Promise(resolve => {
+//     var documentRef = db.collection("scrollIndex").doc("scrollIndex");
+
+//     documentRef
+//       .get()
+//       .then(function(doc) {
+//         if (doc.exists) {
+//           resolve(doc.data().scrollIndex);
+//         } else {
+//           // doc.data() will be undefined in this case
+//           console.log("No such document!");
+//         }
+//       })
+//       .catch(function(error) {
+//         console.log("Error getting document:", error);
+//       });
+//   });
+
+//   return scrollIndex;
+// }
+
+// function scrollUp() {
+//   var documentRef = db.collection("scrollIndex").doc("scrollIndex");
+//   documentRef.update({
+//     scrollIndex: firebase.firestore.FieldValue.increment(1)
+//   });
+//   getScrollIndex();
+// }
+
+// function scrollDown() {
+//   var documentRef = db.collection("scrollIndex").doc("scrollIndex");
+//   documentRef.update({
+//     scrollIndex: firebase.firestore.FieldValue.increment(-1)
+//   });
+//   getScrollIndex();
+// }
