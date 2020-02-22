@@ -9,8 +9,8 @@ const scrollUp = () => dispatch(itemsActions.scrollUp());
 const dispatch = useDispatch();
 
   return (
-    <button onClick={() => scrollUp()}>
-      Scroll Up
+    <button className ="arrow-left" onClick={() => scrollUp()}>
+      Scroll Left
     </button>
   );
 }
@@ -20,8 +20,8 @@ const scrollDown = () => dispatch(itemsActions.scrollDown());
 const dispatch = useDispatch();
 
   return (
-    <button onClick={() => scrollDown()}>
-      Scroll Down
+    <button className="arrow-right" onClick={() => scrollDown()}>
+      Scroll Right
     </button>
   );
 }

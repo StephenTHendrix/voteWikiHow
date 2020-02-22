@@ -1,11 +1,18 @@
+.arrow-up {
+  background: blue;
+}
+
 .arrow-down {
+  background: red;
+}
+
+.arrow-down, .arrow-up {
   width: 50px;
   height: 50px;
-  background: red;
   position: relative;
 }
 
-.arrow-down:before, .arrow-down:after {
+.arrow-down:before, .arrow-down:after, .arrow-up:before, .arrow-up:after {
   content: "";
   display: block;
   width: 20px;
@@ -15,45 +22,28 @@
   top: 20px;
 }
 
-.arrow-down:before {
+.arrow-down:before, .arrow-up:before {
   right: 21px;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
+}
+
+.arrow-down:after, .arrow-up:after {
+  right: 10px;
+}
+
+.arrow-down:before {
   transform: rotate(45deg);
 }
 
 .arrow-down:after {
-  right: 10px;
   transform: rotate(-45deg);
 }
 
-
-
-.arrow-up {
-  width: 50px;
-  height: 50px;
-  background: blue;
-  position: relative;
-}
-
-.arrow-up:before, .arrow-up:after {
-  content: "";
-  display: block;
-  width: 20px;
-  height: 5px;
-  background: white;
-  position: absolute;
-  top: 20px;
-}
-
 .arrow-up:before {
-  right: 21px;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
   transform: rotate(-45deg);
 }
 
 .arrow-up:after {
-  right: 10px;
   transform: rotate(45deg);
 }

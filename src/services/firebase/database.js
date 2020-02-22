@@ -1,62 +1,60 @@
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
-import { db } from './';
+import * as firebase from "firebase/app";
+import "firebase/firestore";
+import { db } from "./";
 
 function getItems() {
   const items = new Promise(resolve => {
-    db
-      .collection('items')
+    db.collection("items")
       .get()
       .then(function(querySnapshot) {
         const itemData = [];
         querySnapshot.forEach(function(doc) {
           itemData.push({
             ...doc.data(),
-            id: doc.id,
+            id: doc.id
           });
         });
         resolve(itemData);
       });
   });
-  console.log('GETITEMS:', items)
+  console.log("GETITEMS:", items);
   return items;
 }
 
 function getScrollIndex() {
-  
   const scrollIndex = new Promise(resolve => {
-
     var documentRef = db.collection("scrollIndex").doc("scrollIndex");
 
-documentRef.get().then(function(doc) {
-    if (doc.exists) {
-        console.log("Document data:", doc.data());
-        resolve(doc.data().scrollIndex);
-    } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-    }
-}).catch(function(error) {
-    console.log("Error getting document:", error);
-});
-
-    
+    documentRef
+      .get()
+      .then(function(doc) {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+          resolve(doc.data().scrollIndex);
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      })
+      .catch(function(error) {
+        console.log("Error getting document:", error);
+      });
   });
-  console.log('GETSCROLLINDEX:', scrollIndex)
+  console.log("GETSCROLLINDEX:", scrollIndex);
   return scrollIndex;
 }
 
 function voteUp(documentId) {
-  const documentRef = db.collection('items').doc(documentId);
+  const documentRef = db.collection("items").doc(documentId);
   documentRef.update({
-    voteCount: firebase.firestore.FieldValue.increment(1),
+    voteCount: firebase.firestore.FieldValue.increment(1)
   });
 }
 
 function scrollUp() {
   var documentRef = db.collection("scrollIndex").doc("scrollIndex");
   documentRef.update({
-    scrollIndex: firebase.firestore.FieldValue.increment(1),
+    scrollIndex: firebase.firestore.FieldValue.increment(1)
   });
   getScrollIndex();
 }
@@ -64,15 +62,15 @@ function scrollUp() {
 function scrollDown() {
   var documentRef = db.collection("scrollIndex").doc("scrollIndex");
   documentRef.update({
-    scrollIndex: firebase.firestore.FieldValue.increment(-1),
+    scrollIndex: firebase.firestore.FieldValue.increment(-1)
   });
   getScrollIndex();
 }
 
 function voteDown(documentId) {
-  const documentRef = db.collection('items').doc(documentId);
+  const documentRef = db.collection("items").doc(documentId);
   documentRef.update({
-    voteCount: firebase.firestore.FieldValue.increment(-1),
+    voteCount: firebase.firestore.FieldValue.increment(-1)
   });
 }
 
@@ -82,5 +80,5 @@ export const databaseActions = {
   scrollUp,
   scrollDown,
   voteUp,
-  voteDown,
+  voteDown
 };

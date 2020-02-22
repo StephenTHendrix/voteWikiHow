@@ -1,0 +1,51 @@
+.arrow-left {
+  background: orange;
+}
+
+.arrow-right {
+  background: green;
+}
+  /*
+.arrow-right, .arrow-left {
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+
+.arrow-right:before, .arrow-right:after, .arrow-left:before, .arrow-left:after {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 5px;
+  background: white;
+  position: absolute;
+  top: 20px;
+}
+
+.arrow-right:before, .arrow-left:before {
+  right: 21px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.arrow-right:after, .arrow-left:after {
+  right: 10px;
+}
+
+
+
+.arrow-right:before {
+  transform: rotate(135deg);
+}
+
+.arrow-right:after {
+  transform: rotate(-135deg);
+}
+
+.arrow-left:before {
+  transform: rotate(-135deg);
+}
+
+.arrow-left:after {
+  transform: rotate(135deg);
+} */
