@@ -6,6 +6,9 @@ const GET_SCROLLINDEX_START = "items/GET_SCROLLINDEX_START";
 const GET_SCROLLINDEX_SUCCESS = "items/GET_SCROLLINDEX_SUCCESS";
 const VOTE_UP = "items/VOTE_UP";
 const VOTE_DOWN = "items/VOTE_DOWN";
+const SCROLL_UP = "items/SCROLL_UP";
+
+let passedInScrollIndex;
 
 const handleGetItemsStart = () => ({
   type: GET_ITEMS_START
@@ -30,6 +33,11 @@ const handleVoteUp = documentId => ({
   payload: documentId
 });
 
+const handleScrollUp = scrollIndex => ({
+  type: SCROLL_UP,
+  payload: scrollIndex
+});
+
 const handleVoteDown = documentId => ({
   type: VOTE_DOWN,
   payload: documentId
@@ -47,7 +55,9 @@ const getScrollIndex = () => {
   return async dispatch => {
     dispatch(handleGetScrollIndexStart());
     const results = await databaseActions.getScrollIndex();
+    passedInScrollIndex = results;
     dispatch(handleGetscrollIndexSuccess(results));
+    console.log('GETSCROLLINDEXITEMSDISPATCH:', results)
   };
 };
 
@@ -56,6 +66,17 @@ const voteUp = documentId => {
     dispatch(handleVoteUp(documentId));
     databaseActions.voteUp(documentId);
   };
+};
+
+const scrollUp = () => {
+
+    return async dispatch => {
+      const results = await databaseActions.getScrollIndex();
+      console.log('RESULTS', results)
+      dispatch(handleScrollUp(results));
+      databaseActions.scrollUp();
+    };
+  
 };
 
 const voteDown = documentId => {
@@ -68,6 +89,7 @@ const voteDown = documentId => {
 export const actions = {
   voteUp,
   voteDown,
+  scrollUp,
   getItems,
   getScrollIndex
 };
@@ -85,7 +107,7 @@ export const reducer = (state = initialState, action) => {
   let itemIndex;
   let item;
   let updatedItem;
-  // let scrollIndex;
+  let scrollIndex;
 
   switch (action.type) {
     case GET_ITEMS_START:
@@ -138,12 +160,35 @@ export const reducer = (state = initialState, action) => {
             }
           : item
       );
-
       return {
         ...state,
         items,
         hasVoted: true
       };
+
+      case SCROLL_UP:
+      items = [...state.items];
+      scrollIndex = action.payload;
+      console.log('RETURNED SCROLL UP ACTIONPAYLOAD:', action.payload)
+      // items.forEach((item, index) => {
+      //   if (item.id === action.payload) {
+      //     itemIndex = index;
+      //   }
+      // });
+      // item = state.items.find(item => item.id === action.payload);
+      // updatedItem = {
+      //   ...item,
+      //   voteCount: item.voteCount + 1
+      // };
+      // items[itemIndex] = updatedItem;
+
+      return {
+        ...state,
+        items,
+        hasVoted: true,
+        scrollIndex: scrollIndex,
+      };
+
     default:
       return state;
   }
