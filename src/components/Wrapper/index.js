@@ -1,3 +1,4 @@
+// TODO: Rename component
 import React from "react";
 import "./style.css";
 
